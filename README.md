@@ -1,5 +1,5 @@
 # 💳 Sistema de Pagamento — UM Sushi 🍣  
-**Squad 4 — Técnicas de Refatoração**  
+**Squad 4**  
 Projeto acadêmico desenvolvido na disciplina **MATA55 - Programação Orientada a Objetos** (UFBA - 2025.1) com base em um cliente real: o restaurante UM Sushi.
 
 ---
@@ -60,12 +60,6 @@ Todos os módulos entregues devem conter:
 
 ---
 
-## 🧠 Temática do Squad
-
-> Aplicação de **Técnicas de Refatoração** com base nos princípios de Martin Fowler, visando legibilidade, modularidade e reutilização de código ao longo do projeto.
-
----
-
 ## 💻 Tecnologias Utilizadas
 
 - Linguagem: Python
@@ -84,7 +78,7 @@ Todos os módulos entregues devem conter:
 ## 📚 Referências da Disciplina
 
 - **POO na prática:** abstração, herança, polimorfismo e encapsulamento.
-- **Refatoração:** Clean Code, Martin Fowler.
+- **Clean Code, Martin Fowler.**
 - **Stack Trace, tratamento de exceções e debugging.**
 
 ---
