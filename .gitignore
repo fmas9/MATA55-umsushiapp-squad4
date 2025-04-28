@@ -1,0 +1,61 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cython debug symbols
+cython_debug/
+
+# Virtual environment
+venv/
+.env/
+.venv/
+env/
+ENV/
+Pipfile.lock
+poetry.lock
+
+# VSCode settings (optional)
+.vscode/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pylint / Flake8 / Ruff
+.pylint.d/
+.flake8
+ruff_cache/
+
+# FastAPI auto-generated OpenAPI schema
+openapi.json
+
+# IDE files (PyCharm, etc.)
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Database local files (if any local SQLite, for example)
+*.db
+*.sqlite3
+
+# Docker / Compose (if you later dockerize)
+docker-compose.override.yml
+
+# Cache / temp files
+.cache/
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
