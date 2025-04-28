@@ -1,4 +1,4 @@
-# 📦 Projeto Orders & Payments API (FastAPI + Mock)
+# PoC (Prova de Conceito) do Sistema de Pagamentos API (FastAPI + Mock)
 
 Esse diretório contém um serviço API em /PoC para prova de conceito do UML proposto no diretório /documentacao, o projeto foi desenvolvido usando **FastAPI**, simulando operações de **Pedidos (Orders)** e **Pagamentos (Payments)** com repositórios **mockados**.
 
