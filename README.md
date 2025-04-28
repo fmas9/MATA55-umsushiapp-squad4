@@ -68,11 +68,12 @@ Todos os módulos entregues devem conter:
 
 ## 💻 Tecnologias Utilizadas
 
-- Linguagem: Java (ou definida em aula)
+- Linguagem: Python
+- Framework Principal: FastAPI
 - Versionamento: GitHub
-- Testes: JUnit (ou equivalente)
+- Testes: Pytest
 - Integração futura com mensageria (eventualmente com RabbitMQ ou Kafka)
-- Interface: CLI, simulador web ou console
+- Interface: Next.JS (Ou definida em sala de aula)
 
 ---
 
@@ -84,7 +85,6 @@ Todos os módulos entregues devem conter:
 
 - **POO na prática:** abstração, herança, polimorfismo e encapsulamento.
 - **Refatoração:** Clean Code, Martin Fowler.
-- **Fundamentos teóricos:** Platão e Aristóteles aplicados à modelagem de software.
 - **Stack Trace, tratamento de exceções e debugging.**
 
 ---
@@ -101,6 +101,5 @@ Todos os módulos entregues devem conter:
 
 ## 🐙 Repositório oficial
 
-> Em breve será atualizado com os módulos, diagramas UML, exemplos de uso e instruções de execução.
-
+- Backend: Neste diretório está contido o PoC ("Prova de Conceito" (Proof of Concept)) em arquitetura Hexagonal (referência: https://medium.com/bemobi-tech/arquiteturas-de-software-a4c55749a7eb)
 ---
