@@ -47,7 +47,7 @@ uvicorn adapters.inbound.fastapi_adapter:app --reload
 ```json
 {
   "items": ["Chessburger", "Coke"],
-  "total_value": 19.90
+  "total": 19.90
 }
 ```
 
@@ -58,7 +58,7 @@ uvicorn adapters.inbound.fastapi_adapter:app --reload
   "id": "uuid-gerado",
   "order_date": "2025-04-28T12:00:00",
   "items": ["Chessburger", "Coke"],
-  "total_value": 19.9,
+  "total": 19.9,
   "status": "InProgress"
 }
 ```
@@ -76,7 +76,7 @@ uvicorn adapters.inbound.fastapi_adapter:app --reload
     "id": "uuid-gerado",
     "order_date": "2025-04-28T12:00:00",
     "items": ["Item 1", "Item 2"],
-    "total_value": 100.0,
+    "total": 100.0,
     "status": "InProgress"
   }
 ]
