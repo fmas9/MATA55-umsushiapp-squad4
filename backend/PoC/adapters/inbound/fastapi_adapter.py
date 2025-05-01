@@ -15,6 +15,7 @@ repository_instance = MockOrderRepository()
 payment_repository = MockPaymentRepository()
 
 # Dependency injection for repository (can be overridden in tests)
+# Injeção de dependencia para repositório de pedido (Pode ser alterado em testes futuros)
 async def get_order_repository() -> MockOrderRepository:
     # In production, you could return a real implementation
     return repository_instance
