@@ -21,6 +21,7 @@ async def get_order_repository() -> MockOrderRepository:
     return repository_instance
 
 # Dependency injection for service
+# Injeção de dependencia para serviço
 def get_order_service(
     repo: MockOrderRepository = Depends(get_order_repository)
 ) -> OrderService:
