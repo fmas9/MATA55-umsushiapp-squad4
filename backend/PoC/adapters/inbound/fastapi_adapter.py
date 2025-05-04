@@ -26,6 +26,7 @@ def get_order_service(
 ) -> OrderService:
     return OrderService(repository=repo)
 
+# Retornará a lista de pedidos da sessão
 @app.get("/orders", response_model=List[Order])
 async def list_orders(
     service: OrderService = Depends(get_order_service),
