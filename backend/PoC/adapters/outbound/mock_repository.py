@@ -1,6 +1,6 @@
 from typing import List
 from domain.models import Order
-from application.ports import OrderRepositoryPort
+from application.ports.order_repository_port import OrderRepositoryPort
 
 class MockOrderRepository(OrderRepositoryPort):
     def __init__(self):
