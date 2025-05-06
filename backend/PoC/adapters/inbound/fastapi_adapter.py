@@ -6,7 +6,7 @@ from uuid import UUID
 from domain.models import Order
 from application.services import OrderService
 from adapters.outbound.mock_repository import MockOrderRepository
-from adapters.inbound.schemas import CreateOrderRequest
+from domain.dtos.order_create import CreateOrderRequest
 
 app = FastAPI()
 
