@@ -54,3 +54,7 @@ def create_payment(payment: PaymentCreateDTO):
 @app.get("/payments")
 def list_payments():
     return payment_repository.list_payments()
+
+@app.get("/payments/pix")
+def list_payments():
+    return payment_repository.list_payments()
