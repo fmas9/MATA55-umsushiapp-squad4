@@ -7,6 +7,7 @@ from typing import List, Any
 class OrderStatus(Enum):
     InProgress = "InProgress"
     AwaitingPayment = "AwaitingPayment"
+    PaymentCompleted = "PaymentCompleted"
     Completed = "Completed"
 
 @dataclass
