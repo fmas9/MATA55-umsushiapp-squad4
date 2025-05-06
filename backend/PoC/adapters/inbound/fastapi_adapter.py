@@ -56,5 +56,5 @@ def list_payments():
     return payment_repository.list_payments()
 
 @app.get("/payments/pix")
-def list_payments():
+def list_pix_payments():
     return payment_repository.list_payments()["pix"]
