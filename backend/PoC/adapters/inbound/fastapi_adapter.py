@@ -12,7 +12,7 @@ app = FastAPI()
 
 # Repository instances, to use cached life cycle MockOrder
 repository_instance = MockOrderRepository()
-payment_repository = MockPaymentRepository()
+payment_repository = MockPaymentRepository() # TODO: Create PaymentService and change instance uses 
 
 # Dependency injection for repository (can be overridden in tests)
 # Injeção de dependencia para repositório de pedido (Pode ser alterado em testes futuros)
