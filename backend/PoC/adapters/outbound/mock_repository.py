@@ -1,5 +1,5 @@
 from typing import List
-from domain.models import Order
+from domain.entities.order import Order
 from application.ports.order_repository_port import OrderRepositoryPort
 
 class MockOrderRepository(OrderRepositoryPort):

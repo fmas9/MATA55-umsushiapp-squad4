@@ -1,5 +1,5 @@
 from typing import List
-from domain.models import Order, OrderStatus
+from domain.entities.order import Order, OrderStatus
 from application.ports.order_repository_port import OrderRepositoryPort
 from uuid import uuid4
 from datetime import datetime, timezone
