@@ -5,7 +5,7 @@ from application.services.order_service import OrderService
 from application.services.payment_service import PaymentService
 from adapters.outbound.mock_order_repository import MockOrderRepository
 from domain.dtos.order_create import CreateOrderDTO
-from domain.dtos.payment_create import PaymentCreateDTO
+from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.payment import Payment
 from domain.entities.order import Order
 
@@ -69,7 +69,7 @@ def list_pix_payments():
         status_code=status.HTTP_201_CREATED
     )
 async def create_payment(
-    payment: PaymentCreateDTO,
+    payment: CreatePaymentDTO,
     service: PaymentService = Depends(get_payment_service),
 ):
     if not payment.amount > 0:
