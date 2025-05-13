@@ -24,4 +24,4 @@ async def test_save_and_list_orders():
     assert paginated == [order2]
 
     paginated = await manager.list_orders(offset=2, limit=2)
-    assert
+    assert paginated == [order3]
