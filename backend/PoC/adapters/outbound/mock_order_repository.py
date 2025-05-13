@@ -8,6 +8,9 @@ class MockOrderRepository(OrderRepositoryPort):
 
     async def list_orders(self, offset: int = 0, limit: int = 10) -> List[Order]:
         return self._orders[offset:offset + limit]
+    
+    async def get_order_by_id(self, order_id: str) -> None:
+         return self._orders
 
     async def save_order(self, order: Order) -> None:
         self._orders.append(order)
