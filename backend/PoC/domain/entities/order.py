@@ -3,6 +3,7 @@ from enum import Enum
 from uuid import UUID, uuid4
 from datetime import datetime
 from typing import List, Any
+from pydantic import BaseModel
 
 class OrderStatus(Enum):
     InProgress = "InProgress"
@@ -10,10 +11,9 @@ class OrderStatus(Enum):
     PaymentCompleted = "PaymentCompleted"
     Completed = "Completed"
 
-@dataclass
-class Order:
+class Order(BaseModel):
     id: UUID
     order_date: datetime
-    items: List[Any]
-    total_value: float
-    status: OrderStatus
+    items: List[str]
+    total: float
+    status: OrderStatus = OrderStatus.InProgress  # Use enum and default to InProgress
