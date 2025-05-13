@@ -1,9 +1,12 @@
+from application.ports.order_repository_port import OrderRepositoryPort
+from application.ports.payment_repository_port import PaymentRepositoryPort
+from domain.entities.order import OrderStatus
 from domain.entities.payment import Payment
-from domain.dtos.payment_create import PaymentCreateDTO
+from domain.dtos.payment_create import CreatePaymentDTO
 from uuid import uuid4
 from datetime import datetime
 
-class MockPaymentRepository:
+class MockPaymentRepository(PaymentRepositoryPort):#CreatePaymentDTO
     def __init__(self):
         self.payments = {"credit": [], "debit": [], "pix": []}
 
@@ -15,7 +18,7 @@ class MockPaymentRepository:
             payment_type=payment_dto.payment_type,
             payment_date=datetime.now()
         )
-        self.payments[payment.payment_type].append(payment)
+        self.payments.append(payment)
         return payment
 
     def list_payments(self):
