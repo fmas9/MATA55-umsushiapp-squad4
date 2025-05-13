@@ -7,8 +7,9 @@ from datetime import datetime
 class MockPaymentRepository(PaymentRepositoryPort):
     def __init__(self):
         self.payments = {"credit": [], "debit": [], "pix": []}
+        self._payments = []
 
-    def create_payment(self, payment_dto: CreatePaymentDTO) -> Payment:
+    async def create_payment_mock(self, payment_dto: CreatePaymentDTO) -> Payment:
         payment = Payment(
             id=uuid4(),
             order_id=payment_dto.order_id,
@@ -16,8 +17,25 @@ class MockPaymentRepository(PaymentRepositoryPort):
             payment_type=payment_dto.payment_type,
             payment_date=datetime.now()
         )
-        self.payments.append(payment)
+        self.payment[payment.payment_type].append(payment)
         return payment
+    
+    async def create_payment(self, payment_dto: CreatePaymentDTO) -> Payment:
+        _payment = Payment(
+            id=uuid4(),
+            order_id=payment_dto.order_id,
+            amount=payment_dto.amount,
+            payment_type=payment_dto.payment_type,
+            payment_date=datetime.now()
+        )
+        self._payments.append(_payment)
+        return _payment
 
-    def list_payments(self):
-        return self.payments
+    async def list_payments(self, offset: int = 0, limit: int = 10):
+        return self._payments[offset:offset + limit]
+    
+    async def process_payment(self, payment_id: str, payment: Payment) -> None:
+        self._payments.append(payment)
+
+    async def save_payment_history(self, payment: Payment) -> None:
+        self._payments.append(payment)
