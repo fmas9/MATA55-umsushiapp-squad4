@@ -1,7 +1,11 @@
+from datetime import datetime, timezone
+from typing import List
+from uuid import uuid4
+from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.payment import Payment
 from application.ports.payment_repository_port import PaymentRepositoryPort
 from application.ports.order_repository_port import OrderRepositoryPort
-from domain.models import OrderStatus
+from domain.entities.order import OrderStatus
 
 class PaymentService:
     def __init__(self, repository: PaymentRepositoryPort, order_repository: OrderRepositoryPort):
@@ -12,5 +16,27 @@ class PaymentService:
         offset = (page - 1) * size
         return await self._repo.list_payments(offset=offset, limit=size)
     
-    async def process_payment(self, order_id: str, payment: Payment) -> None:
-        pass
+    async def create_payment(self, payment_dto: CreatePaymentDTO) -> Payment:
+        payment = Payment(
+            id=uuid4(),
+            order_id=payment_dto.order_id,
+            amount=payment_dto.amount,
+            payment_type=payment_dto.payment_type,
+            payment_date=datetime.now(timezone.utc),
+        )
+        await self._repo.save_payment_history(payment)
+        return payment
+
+    async def process_payment(self, order_id: str) -> Payment:
+
+        order = await self._order_repository.get_order_by_id(order_id)
+        #print("D\Exceção aqui {}".format(order))
+
+        if order.status != OrderStatus.AwaitingPayment:
+            raise ValueError("Pedido em estado inválido.")
+        # Pix gateway call TODO: Implement pix gateway
+        # resp = self.pix_gateway.create_charge(amount=order.amount, external_id=order.id)
+
+        order.status = OrderStatus.PaymentCompleted
+        await self._order_repository.save(order)
+        return {"order_id": order.id, "new_status": order.status} #{"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
