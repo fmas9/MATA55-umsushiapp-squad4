@@ -12,6 +12,6 @@ class OrderRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    async def get_order_by_id(self, order: Order) -> None:
+    async def get_order_by_id(self, order_id: str) -> None:
         pass
 
