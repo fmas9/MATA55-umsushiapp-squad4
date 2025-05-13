@@ -1,5 +1,7 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException, status, Query
+from fastapi.responses import JSONResponse
+import traceback
 from adapters.outbound.mock_payment_repository import MockPaymentRepository
 from application.services.order_service import OrderService
 from application.services.payment_service import PaymentService
@@ -8,6 +10,8 @@ from domain.dtos.order_create import CreateOrderDTO
 from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.payment import Payment
 from domain.entities.order import Order
+from domain.entities.order import OrderStatus
+from uuid import UUID
 
 app = FastAPI()
 
@@ -48,6 +52,34 @@ async def create_order(
         )
     return await service.create_order(items=payload.items, total=payload.total)
 
+@app.post("/orders/{order_id}/checkout", response_model=Order)
+async def checkout_order(
+    order_id: UUID,  # Troque de int para UUID aqui
+    service: OrderService = Depends(get_order_service)
+):
+    order = await service.get_order_by_id(order_id)
+    if not order:
+        print(f"Pedido {order_id} não encontrado.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pedido não encontrado"
+        )
+    if order.status != OrderStatus.InProgress:
+        print(f"Pedido {order_id} não pode ser enviado para checkout. Status atual: {order.status.value}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Pedido não pode ser enviado para checkout"
+        )
+    checked_out_order = await service.checkout_order(order_id)
+    if not checked_out_order:
+        print(f"Falha ao enviar o pedido {order_id} para checkout.")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Falha no checkout"
+        )
+    print(f"Pedido {order_id} enviado para checkout com sucesso.")
+    return checked_out_order
+
 async def get_payment_repository() -> MockPaymentRepository:
     # In production, you could return a real implementation
     return payment_repository
@@ -59,8 +91,9 @@ def get_payment_service(
     return PaymentService(repository=repo, order_repository=repository_instance)
 
 @app.get("/payments/pix")
-def list_pix_payments():
-    return payment_repository.list_payments()["pix"]
+async def list_pix_payments():
+    payments = await payment_repository.list_payments()
+    return payments["pix"]
 
 # Create payments
 @app.post(
@@ -88,3 +121,12 @@ async def list_payments(
     size: int = Query(10, ge=1, le=100)
 ):
     return await service.list_payments(page=page, size=size)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    print("Erro inesperado:", exc)
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Erro interno do servidor."},
+    )

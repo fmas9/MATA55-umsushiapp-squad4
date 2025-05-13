@@ -5,4 +5,4 @@ from uuid import UUID
 class CreatePaymentDTO(BaseModel):
     order_id: UUID
     amount: float
-    payment_type: PaymentType
+    payment_type: PaymentType  # Alterado de 'method' para 'payment_type'
