@@ -4,3 +4,4 @@ pydantic
 fastapi-cache2
 pytest
 stripe
+requests
