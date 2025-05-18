@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 from domain.entities.order import Order
 
 class OrderRepositoryPort(ABC):
@@ -12,6 +12,6 @@ class OrderRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    async def get_order_by_id(self, order_id: str) -> None:
+    async def get_order_by_id(self, order_id: str) -> Optional[Order]:
         pass
 
