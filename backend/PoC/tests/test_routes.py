@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 
 import requests
 
@@ -35,8 +36,11 @@ def init():
 def test_list_orders():
     res = requests.get(f"{url}/orders")
 
-    if res.status_code == 200 and type(res.json()) is list:
-        print(f"status code: {res.status_code}\n", f"conteudo: {res.json()}\n")
+    assert res.status_code == HTTPStatus.OK
+    assert type(res.json()) is list
+    print(
+        f"status code: {res.status_code}\nconteudo: {res.json()}\n\nlist_orders OK.\n",
+    )
 
 
 @tester(f"Enviando requisição POST na url: {url}/orders/, para criar um novo pedido.\n")
@@ -45,11 +49,16 @@ def test_create_order():
 
     res = requests.post(f"{url}/orders", json.dumps(new_order))
 
-    if res.status_code == 201:
-        order_id = res.json()["id"]
-        print(f"status code: {res.status_code}\n", f"id do novo pedido: {order_id}\n")
+    assert res.status_code == HTTPStatus.CREATED
+    assert type(res.json()) is dict
 
-        return order_id
+    order_id = res.json()["id"]
+
+    print(
+        f"status code: {res.status_code}\nid do novo pedido: {order_id}\n\ncreate_order OK.\n"
+    )
+
+    return order_id
 
 
 @tester(
@@ -59,11 +68,14 @@ def test_create_payment(order_id):
     new_payment = {"order_id": order_id, "amount": 15.50, "payment_type": "pix"}
     res = requests.post(f"{url}/payments", json.dumps(new_payment))
 
-    if res.status_code == 201:
-        payment_id = res.json()["id"]
-        print(
-            f"status code: {res.status_code}\n", f"id do novo pagamento: {payment_id}\n"
-        )
+    assert res.status_code == HTTPStatus.CREATED
+    assert type(res.json()) is dict
+
+    payment_id = res.json()["id"]
+
+    print(
+        f"status code: {res.status_code}\nid do novo pagamento: {payment_id}\n\ncreate_payment OK.\n"
+    )
 
 
 @tester(
@@ -72,8 +84,12 @@ def test_create_payment(order_id):
 def test_list_payments():
     res = requests.get(f"{url}/payments")
 
-    if res.status_code == 200 and type(res.json()) is list:
-        print(f"status code: {res.status_code}\n", f"conteudo: {res.json()}\n")
+    assert res.status_code == HTTPStatus.OK
+    assert type(res.json()) is list
+
+    print(
+        f"status code: {res.status_code}\nconteudo: {res.json()}\n\nlist_payment OK.\n"
+    )
 
 
 init()
