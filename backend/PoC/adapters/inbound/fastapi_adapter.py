@@ -10,26 +10,26 @@ from domain.dtos.order_create import CreateOrderDTO
 from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.order import Order, OrderStatus
 from domain.entities.payment import Payment
+from domain.entities.transaction import Transaction
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.responses import JSONResponse
-
-from domain.entities.transaction import Transaction
 
 app = FastAPI()
 
 # Repository instances, to use cached life cycle MockOrder
 repository_instance = MockOrderRepository()
-payment_repository = (
-    MockPaymentRepository()
-)
+payment_repository = MockPaymentRepository()
+
 
 # Dependency injection for order repository (can be overridden in tests)
 # Injeção de dependencia para repositório de pedido (Pode ser alterado em testes futuros)
 async def get_order_repository() -> MockOrderRepository:
     return repository_instance
 
+
 async def get_payment_repository() -> MockPaymentRepository:
     return payment_repository
+
 
 # Dependency injection for payment service
 def get_payment_service(
@@ -37,11 +37,13 @@ def get_payment_service(
 ) -> PaymentService:
     return PaymentService(repository=repo, order_repository=repository_instance)
 
+
 # Dependency injection for order service
 def get_order_service(
     repo: MockOrderRepository = Depends(get_order_repository),
 ) -> OrderService:
     return OrderService(repository=repo)
+
 
 # Retornará a lista de pedidos da sessão
 @app.get("/orders", response_model=List[Order])
@@ -52,6 +54,7 @@ async def list_orders(
 ):
     return await service.list_orders(page=page, size=size)
 
+
 @app.post("/orders", response_model=Order, status_code=status.HTTP_201_CREATED)
 async def create_order(
     payload: CreateOrderDTO, service: OrderService = Depends(get_order_service)
@@ -61,6 +64,7 @@ async def create_order(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid order payload"
         )
     return await service.create_order(items=payload.items, total=payload.total)
+
 
 @app.post("/orders/{order_id}/checkout", response_model=Order)
 async def checkout_order(
@@ -91,11 +95,14 @@ async def checkout_order(
     print(f"Pedido {order_id} enviado para checkout com sucesso.")
     return checked_out_order
 
-# TODO: Implementar filtro para pagamentos somente feitos em pix
-@app.get("/payments/pix")
-async def list_pix_payments():
-    payments = await payment_repository.list_payments()
-    return payments
+
+@app.get("/payments/pix", response_model=List[Payment])
+async def list_pix_payments(
+    service: PaymentService = Depends(get_payment_service),
+    page: int = Query(1, ge=1),
+    size: int = Query(10, ge=1, le=100),
+):
+    return await service.list_pix_payments(page=page, size=size)
 
 
 # Create payments
@@ -109,7 +116,7 @@ async def create_payment(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid payment payload."
         )
     payment = await service.create_payment(payment_dto)
-    #return payment
+    # return payment
     validated_payment = await service.process_payment(payment.order_id, payment.id)
     return validated_payment
 
