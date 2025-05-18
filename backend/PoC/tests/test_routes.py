@@ -92,8 +92,26 @@ def test_list_payments():
     )
 
 
+@tester(
+    f"Enviando requisição GET na url: {url}/payments/pix, para listar os pagamentos pix salvos.\n"
+)
+def test_list_pix_payments():
+    res = requests.get(f"{url}/payments/pix")
+
+    assert res.status_code == HTTPStatus.OK
+    assert type(res.json()) is list
+
+    for payment in res.json():
+        assert payment["payment_type"] == "pix"
+
+    print(
+        f"status code: {res.status_code}\nconteudo: {res.json()}\n\nlist_pix_payment OK.\n"
+    )
+
+
 init()
 test_list_orders()
 order_id = test_create_order()
 test_create_payment(order_id)
 test_list_payments()
+test_list_pix_payments()
