@@ -8,6 +8,7 @@ from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.order import OrderStatus
 from domain.entities.payment import Payment
 from domain.entities.transaction import Transaction
+from enums.payment_type import PaymentType
 
 
 class PaymentService:
@@ -21,6 +22,15 @@ class PaymentService:
         offset = (page - 1) * size
         return await self._repo.list_payments(offset=offset, limit=size)
 
+    async def list_pix_payments(self, page: int = 1, size: int = 10) -> List[Payment]:
+        def is_pix(payment: Payment) -> bool:
+            return payment.payment_type == PaymentType.PIX
+
+        payments = await self.list_payments(page=page, size=size)
+        pix_payments = list(filter(is_pix, payments))
+
+        return pix_payments
+
     async def create_payment(self, payment_dto: CreatePaymentDTO) -> Payment:
         payment = Payment(
             id=uuid4(),
@@ -33,22 +43,20 @@ class PaymentService:
         return payment
 
     async def process_payment(
-        self, 
-        order_id: UUID,
-        payment_id: UUID
+        self, order_id: UUID, payment_id: UUID
     ) -> dict[str, UUID | OrderStatus] | None:
         order = await self._order_repository.get_order_by_id(order_id)
-        payment =  await self._repo.get_payment_by_id(payment_id)
+        payment = await self._repo.get_payment_by_id(payment_id)
         if order and payment is not None:
             if order.status != OrderStatus.AwaitingPayment:
                 raise ValueError("Pedido em estado inválido.")
-            
+
             # Pix gateway call TODO: Implement pix gateway
             # resp = self.pix_gateway.create_charge(amount=order.amount, external_id=order.id)
-            
+
             order.status = OrderStatus.PaymentCompleted
             await self._order_repository.save_order(order)
-            
+
             transaction = Transaction(
                 id=uuid4(),
                 order_id=order.id,
@@ -56,9 +64,9 @@ class PaymentService:
                 payment_id=payment.id,
                 payment_type=payment.payment_type,
                 payment_date=payment.payment_date,
-                payment_total=payment.amount
+                payment_total=payment.amount,
             )
-            
+
             return transaction
             # return {
             #     "order_id": order.id,
