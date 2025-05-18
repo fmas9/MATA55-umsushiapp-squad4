@@ -7,6 +7,7 @@ from application.ports.payment_repository_port import PaymentRepositoryPort
 from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.order import OrderStatus
 from domain.entities.payment import Payment
+from domain.entities.transaction import Transaction
 
 
 class PaymentService:
@@ -28,24 +29,40 @@ class PaymentService:
             payment_type=payment_dto.payment_type,
             payment_date=datetime.now(timezone.utc),
         )
-        await self._repo.save_payment_history(payment)
+        await self._repo.save_payment(payment)
         return payment
 
     async def process_payment(
-        self, order_id: str
+        self, 
+        order_id: UUID,
+        payment_id: UUID
     ) -> dict[str, UUID | OrderStatus] | None:
         order = await self._order_repository.get_order_by_id(order_id)
-        # print("D\Exceção aqui {}".format(order))
-
-        if order is not None:
+        payment =  await self._repo.get_payment_by_id(payment_id)
+        if order and payment is not None:
             if order.status != OrderStatus.AwaitingPayment:
                 raise ValueError("Pedido em estado inválido.")
+            
             # Pix gateway call TODO: Implement pix gateway
             # resp = self.pix_gateway.create_charge(amount=order.amount, external_id=order.id)
-
+            
             order.status = OrderStatus.PaymentCompleted
             await self._order_repository.save_order(order)
-            return {
-                "order_id": order.id,
-                "new_status": order.status,
-            }  # {"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
+            
+            transaction = Transaction(
+                id=uuid4(),
+                order_id=order.id,
+                order_status=order.status,
+                payment_id=payment.id,
+                payment_type=payment.payment_type,
+                payment_date=payment.payment_date,
+                payment_total=payment.amount
+            )
+            
+            return transaction
+            # return {
+            #     "order_id": order.id,
+            #     "payment_id": payment.id,
+            #     "new_status": order.status,
+            #     "payment_type": payment.payment_type
+            # }  # {"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
