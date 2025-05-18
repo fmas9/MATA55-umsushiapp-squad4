@@ -25,9 +25,9 @@ class MockOrderRepository(OrderRepositoryPort):
             if existing_order.id == order.id:
                 self._orders[idx] = order  # Atualiza
                 return
-        self._orders.append(order) 
+        self._orders.append(order)
 
-    async def checkout_order(self, order_id: str) -> Order | None:
+    async def checkout_order(self, order_id: UUID) -> Order | None:
         order = await self.get_order_by_id(order_id)
         if order and order.status == OrderStatus.InProgress:
             order.status = OrderStatus.AwaitingPayment
