@@ -17,8 +17,8 @@ class OrderService:
             id=uuid4(),
             order_date=datetime.now(timezone.utc),
             items=items,
-            total=total,  # Corrija aqui
-            status=OrderStatus.InProgress
+            total=total,
+            status=OrderStatus.AwaitingPayment # Era InProgress, porém somente será após confirmado pagamento
         )
         await self.repository.save_order(order)
         return order
