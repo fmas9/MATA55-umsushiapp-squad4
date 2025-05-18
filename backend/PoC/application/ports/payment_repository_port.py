@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 from domain.entities.payment import Payment
 
 class PaymentRepositoryPort(ABC):
@@ -8,9 +9,9 @@ class PaymentRepositoryPort(ABC):
         pass
 
     @abstractmethod
-    async def process_payment(self, payment_id: str, payment: Payment) -> None:
+    async def save_payment(self, payment: Payment) -> None:
         pass
 
     @abstractmethod
-    async def save_payment_history(self, payment: Payment) -> None:
+    async def get_payment_by_id(self, payment_id: UUID)  -> Payment | None:
         pass
