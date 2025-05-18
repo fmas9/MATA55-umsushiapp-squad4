@@ -1,7 +1,8 @@
+from typing import Optional
 from application.ports.payment_repository_port import PaymentRepositoryPort
 from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.payment import Payment
-from uuid import uuid4
+from uuid import UUID, uuid4
 from datetime import datetime
 
 class MockPaymentRepository(PaymentRepositoryPort):
@@ -34,8 +35,17 @@ class MockPaymentRepository(PaymentRepositoryPort):
     async def list_payments(self, offset: int = 0, limit: int = 10):
         return self._payments[offset:offset + limit]
     
-    async def process_payment(self, payment_id: str, payment: Payment) -> None:
-        self._payments.append(payment)
+    # Implementação de atualiação ou append caso adicionado novo dado,
+    # Para evitar duplicatas
+    async def save_payment(self, payment: Payment) -> None:
+        for idx, existing_payment in enumerate(self._payments):
+            if existing_payment.id == payment.id:
+                self._payments[idx] = payment  # Atualiza
+                return
+        self._payments.append(payment) 
 
-    async def save_payment_history(self, payment: Payment) -> None:
-        self._payments.append(payment)
+    async def get_payment_by_id(self, payment_id: UUID)  -> Payment | None:
+        for payment in self._payments:
+            if payment.id == payment_id:
+                return payment
+        return None
