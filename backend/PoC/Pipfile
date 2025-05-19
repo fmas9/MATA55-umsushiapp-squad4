@@ -9,6 +9,7 @@ uvicorn = "*"
 pydantic = "*"
 fastapi-cache2 = "*"
 pytest = "*"
+mercadopago = "*"
 
 [dev-packages]
 
