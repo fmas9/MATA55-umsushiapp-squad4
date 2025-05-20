@@ -4,6 +4,7 @@ from uuid import UUID
 
 from adapters.outbound.mock_order_repository import MockOrderRepository
 from adapters.outbound.mock_payment_repository import MockPaymentRepository
+from application.services.external_services.mercado_livre_gateway import MercadoLivreGateway
 from application.services.order_service import OrderService
 from application.services.payment_service import PaymentService
 from domain.dtos.order_create import CreateOrderDTO
@@ -19,7 +20,7 @@ app = FastAPI()
 # Repository instances, to use cached life cycle MockOrder
 repository_instance = MockOrderRepository()
 payment_repository = MockPaymentRepository()
-
+gateway = MercadoLivreGateway()
 
 # Dependency injection for order repository (can be overridden in tests)
 # Injeção de dependencia para repositório de pedido (Pode ser alterado em testes futuros)
@@ -118,7 +119,11 @@ async def create_payment(
     payment = await service.create_payment(payment_dto)
     # return payment
     validated_payment = await service.process_payment(payment.order_id, payment.id)
+    # TODO: Passar essa parte do código para a lógica do checkout
+    link = service.generate_link(validated_payment)
+    print("D\ Link de pagamento gerado {}".format(link))
     return validated_payment
+    #return templates.TemplateResponse("add_student.html", {"link": link})
 
 
 # Payments history
