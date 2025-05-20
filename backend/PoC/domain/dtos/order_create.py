@@ -1,6 +1,9 @@
-from pydantic import BaseModel
 from typing import List
 
+from domain.entities.product import Product
+from pydantic import BaseModel
+
+
 class CreateOrderDTO(BaseModel):
-    items: List[str]
+    items: List[Product]
     total: float
