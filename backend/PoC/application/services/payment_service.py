@@ -3,6 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 
 from application.ports.order_repository_port import OrderRepositoryPort
+from application.ports.payment_gateway import PaymentGateway
 from application.ports.payment_repository_port import PaymentRepositoryPort
 from domain.dtos.payment_create import CreatePaymentDTO
 from domain.entities.order import OrderStatus
@@ -13,10 +14,11 @@ from enums.payment_type import PaymentType
 
 class PaymentService:
     def __init__(
-        self, repository: PaymentRepositoryPort, order_repository: OrderRepositoryPort
+        self, repository: PaymentRepositoryPort, order_repository: OrderRepositoryPort, gateway: PaymentGateway
     ):
         self._repo = repository
         self._order_repository = order_repository
+        self.gateway = gateway
 
     async def list_payments(self, page: int = 1, size: int = 10) -> List[Payment]:
         offset = (page - 1) * size
@@ -59,18 +61,27 @@ class PaymentService:
 
             transaction = Transaction(
                 id=uuid4(),
-                order_id=order.id,
-                order_status=order.status,
-                payment_id=payment.id,
-                payment_type=payment.payment_type,
-                payment_date=payment.payment_date,
-                payment_total=payment.amount,
+                # order_id=order.id,
+                # order_status=order.status,
+                items=order.items,
+                # payment_id=payment.id,
+                # payment_type=payment.payment_type,
+                # payment_date=payment.payment_date,
+                # payment_total=payment.amount,
+                back_urls={
+                    "success": "https://127.0.0.1:8000/",
+                    "failure": "https://127.0.0.1:8000/",
+                    "pending": "https://127.0.0.1:8000/",
+                }
             )
 
             return transaction
-            # return {
-            #     "order_id": order.id,
-            #     "payment_id": payment.id,
-            #     "new_status": order.status,
-            #     "payment_type": payment.payment_type
-            # }  # {"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
+# return {
+#     "order_id": order.id,
+#     "payment_id": payment.id,
+#     "new_status": order.status,
+#     "payment_type": payment.payment_type
+# }  # {"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
+
+    def generate_link(self, payment_data: dict) -> str:
+        return self.gateway.create_payment_link(payment_data)
