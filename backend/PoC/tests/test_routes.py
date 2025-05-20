@@ -2,8 +2,9 @@ import json
 from http import HTTPStatus
 
 import requests
+from menu import Acaraje, Coca_Cola, new_order
 
-base = "http://localhost"
+base = "http://127.0.0.1"
 port = "8000"
 
 url = f"{base}:{port}"
@@ -45,9 +46,9 @@ def test_list_orders():
 
 @tester(f"Enviando requisição POST na url: {url}/orders/, para criar um novo pedido.\n")
 def test_create_order():
-    new_order = {"items": ["Acarajé", "Coca-Cola"], "total": 15.50}
+    order = new_order([Acaraje, Coca_Cola]).model_dump()
 
-    res = requests.post(f"{url}/orders", json.dumps(new_order))
+    res = requests.post(f"{url}/orders", json.dumps(order))
 
     assert res.status_code == HTTPStatus.CREATED
     assert type(res.json()) is dict
