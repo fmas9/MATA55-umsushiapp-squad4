@@ -1,14 +1,15 @@
-from dataclasses import dataclass
-from enum import Enum
-from uuid import UUID
 from datetime import datetime
 from typing import List
-from pydantic import BaseModel
+from uuid import UUID
+
 from enums.order_type import OrderStatus
+from product import Product
+from pydantic import BaseModel
+
 
 class Order(BaseModel):
     id: UUID
     order_date: datetime
-    items: List[str]
+    items: List[Product]
     total: float
     status: OrderStatus = OrderStatus.InProgress  # Use enum and default to InProgress
