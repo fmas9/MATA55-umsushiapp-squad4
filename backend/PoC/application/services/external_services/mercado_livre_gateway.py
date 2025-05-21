@@ -8,24 +8,10 @@ class MercadoLivreGateway(PaymentGateway):
         self.sdk = mercadopago.SDK(ACCESS_TOKEN)
 
     def create_payment_link(self, payment_data: dict) -> str:
+        # Convertendo os UUID's para string para que seja possivel serializar
+        payment_data["id"] = str(payment_data["id"])
+        for item in payment_data["items"]:
+            item["id"] = str(item["id"])
+
         result = self.sdk.preference().create(payment_data)
         return result["response"]["init_point"]
-
-    # payment_data = {
-    #     "items": [
-    #         {
-    #             "id": "6",
-    #             "title": "X Salada Sem Salada",
-    #             "quantity": 1,
-    #             "currency_id": "BRL",
-    #             "unit_price": 12.0,
-    #         }
-    #     ],
-    #     "back_urls": {
-    #         "success": "https://127.0.0.1:8000/",
-    #         "failure": "https://127.0.0.1:8000/",
-    #         "pending": "https://127.0.0.1:8000/",
-    #     },
-    #     "auto_return": "all",
-    # }
-
