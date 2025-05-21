@@ -49,7 +49,7 @@ class PaymentService:
 
     async def process_payment(
         self, order_id: UUID, payment_id: UUID
-    ) -> dict[str, UUID | OrderStatus] | None:
+    ) -> Transaction | None:
         order = await self._order_repository.get_order_by_id(order_id)
         payment = await self._repo.get_payment_by_id(payment_id)
         if order and payment is not None:
@@ -64,22 +64,15 @@ class PaymentService:
 
             transaction = Transaction(
                 id=uuid4(),
-                order_id=order.id,
-                order_status=order.status,
                 items=order.items,
-                payment_id=payment.id,
-                payment_type=payment.payment_type,
-                payment_date=payment.payment_date,
-                payment_total=payment.amount,
+                back_urls={
+                    "success": "https://127.0.0.1:8000/success",
+                    "failure": "https://127.0.0.1:8000/failure",
+                    "pending": "https://127.0.0.1:8000/pending",
+                },
             )
 
             return transaction
-            # return {
-            #     "order_id": order.id,
-            #     "payment_id": payment.id,
-            #     "new_status": order.status,
-            #     "payment_type": payment.payment_type
-            # }  # {"order_id": order.id, "new_status": order.status, "pix_key": resp["pix_key"]}
 
     def generate_link(self, payment_data: Transaction) -> str:
         return self.gateway.create_payment_link(payment_data.model_dump())
