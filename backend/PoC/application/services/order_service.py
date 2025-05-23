@@ -20,7 +20,7 @@ class OrderService:
             order_date=datetime.now(timezone.utc),
             items=items,
             total=total,
-            status=OrderStatus.AwaitingPayment # Era InProgress, porém somente será após confirmado pagamento
+            status=OrderStatus.InProgress
         )
         await self.repository.save_order(order)
         return order
