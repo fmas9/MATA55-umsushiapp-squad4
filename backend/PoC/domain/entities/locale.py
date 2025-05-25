@@ -1,9 +1,9 @@
 from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel
-class Regiao(BaseModel):
+class Locale(BaseModel):
     id: UUID
-    nome: str
+    name: str
     code: str
     country: str
     description: str | None = None
