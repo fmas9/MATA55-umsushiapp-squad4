@@ -1,7 +1,3 @@
-class Regiao: #cadastro da região para não entrar algo aletorio feito pelo cliente
-    def __init__(self, nome):
-        self.nome = nome
-
 class Cliente: #cadastro do paciente
     def __init__(self, nome, email,senha, regiao, telefone):
         self.nome = nome
