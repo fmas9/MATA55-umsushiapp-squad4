@@ -1,6 +1,6 @@
 import mercadopago
 from application.ports.payment_gateway import PaymentGateway
-from application.services.external_services.credentials import ACCESS_TOKEN
+from application.services.external_services.credentials.credentials import ACCESS_TOKEN
 
 
 class MercadoLivreGateway(PaymentGateway):
