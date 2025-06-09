@@ -4,6 +4,9 @@ from uuid import UUID
 
 from adapters.outbound.mock_order_repository import MockOrderRepository
 from adapters.outbound.mock_payment_repository import MockPaymentRepository
+from application.services.external_services.mercado_livre_gateway import (
+    MercadoLivreGateway,
+)
 from application.services.order_service import OrderService
 from application.services.payment_service import PaymentService
 from domain.dtos.order_create import CreateOrderDTO
@@ -19,6 +22,7 @@ app = FastAPI()
 # Repository instances, to use cached life cycle MockOrder
 repository_instance = MockOrderRepository()
 payment_repository = MockPaymentRepository()
+gateway = MercadoLivreGateway()
 
 
 # Dependency injection for order repository (can be overridden in tests)
@@ -35,7 +39,9 @@ async def get_payment_repository() -> MockPaymentRepository:
 def get_payment_service(
     repo: MockPaymentRepository = Depends(get_payment_repository),
 ) -> PaymentService:
-    return PaymentService(repository=repo, order_repository=repository_instance)
+    return PaymentService(
+        repository=repo, order_repository=repository_instance, gateway=gateway
+    )
 
 
 # Dependency injection for order service
@@ -115,10 +121,18 @@ async def create_payment(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid payment payload."
         )
+
     payment = await service.create_payment(payment_dto)
     # return payment
+
     validated_payment = await service.process_payment(payment.order_id, payment.id)
-    return validated_payment
+    # TODO: Passar essa parte do código para a lógica do checkout
+
+    if validated_payment is not None:
+        link = service.generate_link(validated_payment)
+        print("Link de pagamento gerado {}".format(link))
+        return validated_payment
+        # return templates.TemplateResponse("add_student.html", {"link": link})
 
 
 # Payments history

@@ -59,3 +59,7 @@ build/
 .DS_Store
 Thumbs.db
 
+# Project files
+backend/PoC/.env
+cert.pem
+*.pem

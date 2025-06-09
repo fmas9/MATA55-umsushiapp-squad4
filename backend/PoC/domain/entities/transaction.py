@@ -1,14 +1,12 @@
-from pydantic import BaseModel
+from typing import Dict, List
 from uuid import UUID
-from datetime import datetime
-from domain.entities.order import OrderStatus
-from enums.payment_type import PaymentType
+
+from domain.entities.product import Product
+from pydantic import BaseModel
+
 
 class Transaction(BaseModel):
     id: UUID
-    order_id: UUID
-    order_status: OrderStatus
-    payment_id: UUID
-    payment_type: PaymentType
-    payment_date: datetime
-    payment_total: float
+    items: List[Product]  # MercadoPago
+    back_urls: Dict[str, str]  # MercadoPago
+    auto_return: str = "all"  # MercadoPago
