@@ -63,3 +63,4 @@ Thumbs.db
 backend/PoC/.env
 cert.pem
 *.pem
+limpar_git.sh
