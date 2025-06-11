@@ -61,6 +61,8 @@ Thumbs.db
 
 # Project files
 backend/PoC/.env
+backend/PoC/cert.pem
+backend/PoC/*.pem
 cert.pem
 *.pem
 
