@@ -1,4 +1,6 @@
-![Um sushi app banner](banner_umsushiapp.png)
+<p align="center">
+  <img src="banner_umsushiapp.png" alt="Descrição" width="300">
+</p>
 
 # 💳 Sistema de Pagamento — UM Sushi 🍣  
 **Squad 4**  
