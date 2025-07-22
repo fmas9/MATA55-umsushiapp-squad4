@@ -1,13 +1,13 @@
-from backend.PoC.adapters.outbound.mock_locale_repository import listar_regioes
-from backend.PoC.domain.entities.user.payer import Cliente
+from adapters.outbound.mock_locale_repository import listar_regioes
+from domain.entities.user.payer import Payer
 #lista para aguarda
 regioes = []
 clientes = []
 def cadastrar_cliente():
-    nome = input("Nome do cliente: ")
+    name = input("Nome do cliente: ")
     email = input("Email do cliente: ")
-    senha = input("senha do cliente: ")
-    telefone = input("Telefone do cliente: ")
+    password = input("Senha do cliente: ")
+    phone_number = input("Numero do cliente: ")
     
     if not regioes:
         print("Cadastre ao menos uma região antes de adicionar um cliente.")
@@ -24,14 +24,14 @@ def cadastrar_cliente():
         print("Entrada inválida.")
         return
 
-    cliente = Cliente(nome, email,senha,telefone , regiao_escolhida)
+    cliente = Payer(name, email,password, phone_number, regiao_escolhida)
     clientes.append(cliente)
-    print(f" Cliente '{nome}' cadastrado com sucesso!")
+    print(f" Payer '{name}' cadastrado com sucesso!")
 
 def listar_clientes():
     if not clientes:
         print("Nenhum cliente cadastrado.")
     else:
-        print("👥 Clientes cadastrados:")
+        print("👥 Payers cadastrados:")
         for c in clientes:
-            print(f"- {c.nome} ({c.email}), Região: {c.regiao.nome}")
+            print(f"- {c.name} ({c.email}), Região: {c.regiao.name}")

@@ -25,13 +25,18 @@ pip install -r requirements.txt
 
 3. Rode a aplicação localmente:
 
+Para execução:
+python main.py
+
+Para desenvolvimento:
+
 ```bash
 uvicorn adapters.inbound.fastapi_adapter:app --reload
 ```
 
-4. Futuramente: Será possível acessar a documentação automática (Swagger):
+4. Documentação (Swagger):
 
-- `http://localhost:8000/docs`
+- `https://localhost:8000/docs`
 
 ## 📌 Rotas Disponíveis para teste no CURL ou Insomnia, Postman
 

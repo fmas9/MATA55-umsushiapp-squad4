@@ -20,7 +20,7 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 # Repository instances, to use cached life cycle MockOrder
-repository_instance = MockOrderRepository()
+order_repository = MockOrderRepository()
 payment_repository = MockPaymentRepository()
 gateway = MercadoLivreGateway()
 
@@ -28,9 +28,9 @@ gateway = MercadoLivreGateway()
 # Dependency injection for order repository (can be overridden in tests)
 # Injeção de dependencia para repositório de pedido (Pode ser alterado em testes futuros)
 async def get_order_repository() -> MockOrderRepository:
-    return repository_instance
+    return order_repository
 
-
+# Payment history
 async def get_payment_repository() -> MockPaymentRepository:
     return payment_repository
 
@@ -40,7 +40,7 @@ def get_payment_service(
     repo: MockPaymentRepository = Depends(get_payment_repository),
 ) -> PaymentService:
     return PaymentService(
-        repository=repo, order_repository=repository_instance, gateway=gateway
+        repository=repo, order_repository=order_repository, gateway=gateway
     )
 
 
