@@ -1,3 +1,5 @@
+![Um sushi app banner](banner_umsushiapp.png)
+
 # 💳 Sistema de Pagamento — UM Sushi 🍣  
 **Squad 4**  
 Projeto acadêmico desenvolvido na disciplina **MATA55 - Programação Orientada a Objetos** (UFBA - 2025.1) com base em um cliente real: o restaurante UM Sushi.
