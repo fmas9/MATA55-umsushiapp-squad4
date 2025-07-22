@@ -1,4 +1,5 @@
-from backend.PoC.domain.entities.locale import Locale
+#from backend.PoC.domain.entities.locale import Locale
+from domain.entities.locale import Locale
 from typing import List
 from uuid import UUID
 from locale import locale  # sua entidade
